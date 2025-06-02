@@ -1,41 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using lab6_op.Data;
 using lab6_op.Models;
-using lab6_op.Repositories;
+using System.Collections.Generic;
 
 namespace lab6_op.Services
 {
     public class BookService
     {
-        private readonly IRepository<Book> _bookRepository;
+        private readonly LibraryContext _context;
 
-        public BookService(IRepository<Book> bookRepository)
+        public BookService(LibraryContext context)
         {
-            _bookRepository = bookRepository;
+            _context = context;
         }
 
-        public List<Book> GetAllBooks()
-        {
-            return _bookRepository.GetAll();
-        }
+        public List<Book> GetAllBooks() => _context.Books.ToList();
 
-        public Book GetBookById(int id)
-        {
-            return _bookRepository.GetById(id);
-        }
+        public Book GetBookById(int id) => _context.Books.FirstOrDefault(b => b.ID == id);
 
         public void AddBook(Book book)
         {
-            _bookRepository.Add(book);
+            _context.Books.Add(book);
+            _context.SaveChanges();
         }
 
         public void UpdateBook(Book book)
         {
-            _bookRepository.Update(book);
+            _context.Books.Update(book);
+            _context.SaveChanges();
         }
 
         public void RemoveBook(Book book)
         {
-            _bookRepository.Remove(book);
+            _context.Books.Remove(book);
+            _context.SaveChanges();
         }
     }
 }

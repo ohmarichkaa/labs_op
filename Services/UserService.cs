@@ -1,62 +1,56 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using lab6_op.Data;
 using lab6_op.Models;
-using lab6_op.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace lab6_op.Services
 {
     public class UserService
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly LibraryContext _context;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(LibraryContext context)
         {
-            _userRepository = userRepository;
+            _context = context;
         }
 
-        public List<User> GetAllUsers()
-        {
-            return _userRepository.GetAll();
-        }
+        public List<User> GetAllUsers() => _context.Users.ToList();
 
-        public User? GetUserById(int id)
-        {
-            return _userRepository.GetById(id);
-        }
+        public User GetUserById(int id) => _context.Users.FirstOrDefault(u => u.ID == id);
 
         public void AddUser(string firstName, string lastName, string email, string phone)
         {
-            int nextId = GetNextUserId();
-            var user = new User(nextId, firstName, lastName, email, phone);
-            _userRepository.Add(user);
+            var user = new User(0, firstName, lastName, email, phone);
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
         public void UpdateUser(int id, string firstName, string lastName, string email, string phone)
         {
-            var user = _userRepository.GetById(id);
+            var user = _context.Users.Find(id);
             if (user != null)
             {
                 user.FirstName = firstName;
                 user.LastName = lastName;
                 user.Email = email;
                 user.Phone = phone;
-                _userRepository.Update(user);
+                _context.SaveChanges();
             }
         }
 
         public void DeleteUser(int id)
         {
-            var user = _userRepository.GetById(id);
+            var user = _context.Users.Find(id);
             if (user != null)
             {
-                _userRepository.Remove(user);
+                _context.Users.Remove(user);
+                _context.SaveChanges();
             }
         }
 
-        private int GetNextUserId()
+        public int GetNextUserId()
         {
-            var users = _userRepository.GetAll();
-            return users.Count == 0 ? 1 : users.Max(u => u.ID) + 1;
+            return _context.Users.Any() ? _context.Users.Max(u => u.ID) + 1 : 1;
         }
     }
 }

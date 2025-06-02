@@ -1,5 +1,4 @@
 ﻿using lab6_op.Models;
-using lab6_op.Repositories;
 using lab6_op.Services;
 using System;
 using System.Windows.Forms;
@@ -10,11 +9,13 @@ namespace lab6_op.Forms
     {
         private readonly AuthService _authService;
         private readonly ValidationService _validationService;
+        private readonly BookService _bookService;
 
-        public Registerform(AuthService authService)
+        public Registerform(AuthService authService, BookService bookService)
         {
             InitializeComponent();
             _authService = authService;
+            _bookService = bookService;
             _validationService = new ValidationService();
         }
 
@@ -49,10 +50,8 @@ namespace lab6_op.Forms
             {
                 MessageBox.Show("Реєстрація успішна!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 var user = _authService.GetUserByUsername(username);
-                var bookRepository = new Repository<Book>(new JsonStorage<Book>("books.json"));
-                var bookService = new BookService(bookRepository);
 
-                var userForm = new UUSerForm(user, bookService);
+                var userForm = new UUSerForm(user, _bookService);
                 userForm.Show();
                 this.Hide();
             }

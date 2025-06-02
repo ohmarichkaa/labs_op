@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 public class UserReg : BaseEntity
 {
+
+    public UserReg() : base(0) { }
     [Required(ErrorMessage = "Ім'я користувача обов'язкове")]
     [StringLength(30)]
     public string Username { get; set; }

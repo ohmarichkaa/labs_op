@@ -1,5 +1,4 @@
 ﻿using lab6_op.Models;
-using lab6_op.Repositories;
 using lab6_op.Services;
 using System;
 using System.Windows.Forms;
@@ -9,13 +8,18 @@ namespace lab6_op.Forms
     public partial class LoginForm : Form
     {
         private readonly AuthService _authService;
+        private readonly BookService _bookService;
+        private readonly UserService _userService;
+        private readonly ReservationService _reservationService;
 
-        public LoginForm(AuthService authService)
+        public LoginForm(AuthService authService, BookService bookService, UserService userService, ReservationService reservationService)
         {
             InitializeComponent();
             _authService = authService;
+            _bookService = bookService;
+            _userService = userService;
+            _reservationService = reservationService;
 
-            // Створюємо адміна, якщо ще не створено
             if (_authService.GetUserByUsername("admin") == null)
             {
                 _authService.Register("admin", "admin", "admin", "Admin", "Адмін", "admin@library.com", "0000000000");
@@ -35,15 +39,12 @@ namespace lab6_op.Forms
 
                 if (user.Role.ToLower() == "admin")
                 {
-                    var mainForm = new MainForm(user);
+                    var mainForm = new MainForm(user, _userService, _bookService, _reservationService);
                     mainForm.Show();
                 }
                 else
                 {
-                    var bookRepository = new Repository<Book>(new JsonStorage<Book>("books.json"));
-                    var bookService = new BookService(bookRepository);
-
-                    var userForm = new UUSerForm(user, bookService);
+                    var userForm = new UUSerForm(user, _bookService);
                     userForm.Show();
                 }
 

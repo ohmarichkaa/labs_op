@@ -1,100 +1,64 @@
-﻿using System;
+﻿using lab6_op.Data;
+using lab6_op.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using lab6_op.Models;
-using lab6_op.Repositories;
 
 namespace lab6_op.Services
 {
     public class ReservationService
     {
-        private readonly IRepository<Reservation> _reservationRepository;
-        private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Book> _bookRepository;
+        private readonly LibraryContext _context;
 
-        public ReservationService(
-            IRepository<Reservation> reservationRepository,
-            IRepository<User> userRepository,
-            IRepository<Book> bookRepository)
+        public ReservationService(LibraryContext context)
         {
-            _reservationRepository = reservationRepository;
-            _userRepository = userRepository;
-            _bookRepository = bookRepository;
+            _context = context;
         }
 
-        public List<Reservation> GetAllReservations() => _reservationRepository.GetAll();
+        public List<Reservation> GetAllReservations() => _context.Reservations.ToList();
 
-        public Reservation GetReservationById(int id) => _reservationRepository.GetById(id);
+        public Reservation GetReservationById(int id) => _context.Reservations.Find(id);
 
-        public (bool, string) AddReservation(int userId, int bookId, DateTime startDate, DateTime endDate)
+        public (bool, string) AddReservation(int userId, int bookId, DateTime start, DateTime end)
         {
-            if (startDate > endDate)
-                return (false, "Дата початку не може бути пізнішою за дату кінця.");
-
-            var book = _bookRepository.GetById(bookId);
+            var book = _context.Books.Find(bookId);
             if (book == null || !book.Available)
-                return (false, "Ця книга вже заброньована або не знайдена.");
+                return (false, "Книга недоступна");
 
-            var nextId = _reservationRepository.GetAll().Count == 0
-                ? 1
-                : _reservationRepository.GetAll().Max(r => r.ID) + 1;
-
-            var newReservation = new Reservation(nextId, userId, bookId);
-            newReservation.Reserve(startDate, endDate);
-
-            _reservationRepository.Add(newReservation);
+            var reservation = new Reservation(0, userId, bookId);
+            reservation.Reserve(start, end);
             book.Available = false;
-            _bookRepository.Update(book);
 
-            return (true, "Успішно заброньовано.");
+            _context.Reservations.Add(reservation);
+            _context.SaveChanges();
+            return (true, null);
         }
 
-        public (bool, string) UpdateReservation(int id, int userId, int bookId, DateTime startDate, DateTime endDate)
+        public (bool, string) UpdateReservation(int id, int userId, int bookId, DateTime start, DateTime end)
         {
-            var reservation = _reservationRepository.GetById(id);
-            if (reservation == null)
-                return (false, "Бронювання не знайдено.");
-
-            if (startDate > endDate)
-                return (false, "Дата початку не може бути пізнішою за дату кінця.");
-
-            if (reservation.BookId != bookId)
-            {
-                var oldBook = _bookRepository.GetById(reservation.BookId);
-                var newBook = _bookRepository.GetById(bookId);
-
-                if (newBook == null || !newBook.Available)
-                    return (false, "Нова книга недоступна для бронювання.");
-
-                oldBook.Available = true;
-                newBook.Available = false;
-
-                _bookRepository.Update(oldBook);
-                _bookRepository.Update(newBook);
-
-                reservation.BookId = bookId;
-            }
+            var reservation = _context.Reservations.Find(id);
+            if (reservation == null) return (false, "Не знайдено");
 
             reservation.UserId = userId;
-            reservation.Reserve(startDate, endDate);
-            _reservationRepository.Update(reservation);
+            reservation.BookId = bookId;
+            reservation.Reserve(start, end);
 
-            return (true, "Бронювання оновлено.");
+            _context.SaveChanges();
+            return (true, null);
         }
 
         public void RemoveReservation(int id)
         {
-            var reservation = _reservationRepository.GetById(id);
-            if (reservation == null) return;
-
-            var book = _bookRepository.GetById(reservation.BookId);
-            if (book != null)
+            var reservation = _context.Reservations.Find(id);
+            if (reservation != null)
             {
-                book.Available = true;
-                _bookRepository.Update(book);
-            }
+                var book = _context.Books.Find(reservation.BookId);
+                if (book != null) book.Available = true;
 
-            _reservationRepository.Remove(reservation);
+                _context.Reservations.Remove(reservation);
+                _context.SaveChanges();
+            }
         }
+
     }
 }

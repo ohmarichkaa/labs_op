@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using lab6_op.Models;
-using lab6_op.Repositories;
 using lab6_op.Services;
 
 namespace lab6_op.Forms

@@ -5,6 +5,7 @@ namespace lab6_op.Models
 {
     public class Book : BaseEntity
     {
+        public Book() : base(0) { }
         [Required(ErrorMessage = "Назва книги є обов’язковою")]
         [StringLength(100, MinimumLength = 1, ErrorMessage = "Назва повинна містити від 1 до 100 символів")]
         public string Title { get; set; }
@@ -20,8 +21,8 @@ namespace lab6_op.Models
         public int Pages { get; set; }
 
         public bool Available { get; set; } = true;
-
-        public Book(int id, string title, string author, int year, int pages) : base(id)
+        
+        public Book(string title, string author, int year, int pages)
         {
             Title = title;
             Author = author;

@@ -5,6 +5,7 @@ namespace lab6_op.Models
 {
     public class User : BaseEntity
     {
+        public User() : base(0) { }
         [Required(ErrorMessage = "Ім'я обов'язкове")]
         [StringLength(50, ErrorMessage = "Ім'я не може бути довшим за 50 символів")]
         public string FirstName { get; set; }

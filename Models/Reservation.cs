@@ -4,6 +4,7 @@ using lab6_op.Models;
 
 public class Reservation : BaseEntity, IReservation
 {
+    public Reservation() : base(0) { }
     [Required]
     public int UserId { get; set; }
 

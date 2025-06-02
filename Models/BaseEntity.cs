@@ -9,6 +9,7 @@ namespace lab6_op.Models
     public abstract class BaseEntity
     {
         public int ID { get; set; }
+        public BaseEntity() { }
 
         protected BaseEntity(int id)
         {

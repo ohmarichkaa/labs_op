@@ -17,9 +17,9 @@ namespace lab6_op.Forms
 
             if (_bookService.GetAllBooks().Count == 0)
             {
-                _bookService.AddBook(new Book(1, "Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
-                _bookService.AddBook(new Book(2, "Фауст", "Й.В. Ґете", 1808, 350) { Available = true });
-                _bookService.AddBook(new Book(3, "Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
+                _bookService.AddBook(new Book("Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
+                _bookService.AddBook(new Book("Фауст", "Й.В. Ґете", 1808, 350) { Available = true });
+                _bookService.AddBook(new Book("Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
             }
 
             LoadBooks();
@@ -62,7 +62,6 @@ namespace lab6_op.Forms
             try
             {
                 var newBook = new Book(
-                    GetNextBookId(),
                     txtTitle.Text,
                     txtAuthor.Text,
                     int.Parse(txtYear.Text),

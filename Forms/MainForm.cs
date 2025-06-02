@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using lab6_op.Forms;
 using lab6_op.Models;
-using lab6_op.Repositories;
 using lab6_op.Services;
 
 namespace lab6_op.Forms
@@ -12,27 +10,16 @@ namespace lab6_op.Forms
         private readonly UserService _userService;
         private readonly BookService _bookService;
         private readonly ReservationService _reservationService;
+        private readonly UserReg _currentUser;
 
-        private UserReg _currentUser;
-
-        public MainForm()
+        public MainForm(UserReg user, UserService userService, BookService bookService, ReservationService reservationService)
         {
             InitializeComponent();
 
-            // Ініціалізуємо сервіси з відповідними репозиторіями
-            var userRepo = new Repository<User>(new JsonStorage<User>("users.json"));
-            var bookRepo = new Repository<Book>(new JsonStorage<Book>("books.json"));
-            var reservationRepo = new Repository<Reservation>(new JsonStorage<Reservation>("reservations.json"));
-
-            _userService = new UserService(userRepo);
-            _bookService = new BookService(bookRepo);
-            _reservationService = new ReservationService(reservationRepo, userRepo, bookRepo);
-
-        }
-
-        public MainForm(UserReg user) : this()
-        {
             _currentUser = user;
+            _userService = userService;
+            _bookService = bookService;
+            _reservationService = reservationService;
         }
 
         private void btnUsers_Click(object sender, EventArgs e)
@@ -55,6 +42,7 @@ namespace lab6_op.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            
         }
     }
 }

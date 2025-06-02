@@ -9,6 +9,7 @@ namespace lab6_op.Forms
     public partial class UserForm : Form
     {
         private readonly UserService _userService;
+        private readonly ValidationService _validationService = new ValidationService();
 
         public UserForm(UserService userService)
         {
@@ -48,9 +49,15 @@ namespace lab6_op.Forms
         {
             try
             {
-                
+                var newUser = new User(GetNextUserId(), txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
 
-                _userService.AddUser(txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
+                if (!_validationService.ValidateUser(newUser, out string error))
+                {
+                    MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                _userService.AddUser(newUser.FirstName, newUser.LastName, newUser.Email, newUser.Phone);
 
                 LoadUsers();
                 ClearInputFields();
@@ -61,24 +68,31 @@ namespace lab6_op.Forms
             }
         }
 
+
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (dataGridViewUsers.SelectedRows.Count > 0)
             {
                 int selectedId = (int)dataGridViewUsers.SelectedRows[0].Cells["ID"].Value;
-                var user = _userService.GetUserById(selectedId);
-                if (user != null)
+
+                var updatedUser = new User(selectedId, txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
+
+                if (!_validationService.ValidateUser(updatedUser, out string error))
                 {
-                    _userService.UpdateUser(user.ID, txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
-                    LoadUsers();
-                    ClearInputFields();
+                    MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
+
+                _userService.UpdateUser(updatedUser.ID, updatedUser.FirstName, updatedUser.LastName, updatedUser.Email, updatedUser.Phone);
+                LoadUsers();
+                ClearInputFields();
             }
             else
             {
                 MessageBox.Show("Будь ласка, виберіть користувача для редагування.");
             }
         }
+
 
         private void btnDelete_Click(object sender, EventArgs e)
         {

@@ -2,30 +2,20 @@
 using lab6_op.Repositories;
 using lab6_op.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 
 namespace lab6_op.Forms
 {
     public partial class Registerform : Form
     {
-
-
-
-
         private readonly AuthService _authService;
+        private readonly ValidationService _validationService;
 
         public Registerform(AuthService authService)
         {
             InitializeComponent();
             _authService = authService;
+            _validationService = new ValidationService();
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -45,6 +35,14 @@ namespace lab6_op.Forms
                 return;
             }
 
+            var tempUser = new User(0, firstName, lastName, email, phone);
+
+            if (!_validationService.ValidateUser(tempUser, out string error))
+            {
+                MessageBox.Show(error, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var success = _authService.Register(username, password, "User", firstName, lastName, email, phone);
 
             if (success)
@@ -56,13 +54,12 @@ namespace lab6_op.Forms
 
                 var userForm = new UUSerForm(user, bookService);
                 userForm.Show();
-                userForm.Show();
                 this.Hide();
             }
             else
             {
                 MessageBox.Show("Користувач з таким іменем вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }        
+        }
     }
 }

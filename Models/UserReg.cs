@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using lab6_op.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace lab6_op.Models
+public class UserReg : BaseEntity
 {
+    [Required(ErrorMessage = "Ім'я користувача обов'язкове")]
+    [StringLength(30)]
+    public string Username { get; set; }
 
-    public class UserReg : BaseEntity
+    [Required(ErrorMessage = "Пароль обов'язковий")]
+    public string PasswordHash { get; set; }
+
+    [Required]
+    public string Role { get; set; }
+
+    public UserReg(int id, string username, string passwordHash, string role)
+        : base(id)
     {
-
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public string Role { get; set; }
-
-        public UserReg(int id, string username, string passwordHash,string role)
-            : base(id)
-        {
-            Username = username;
-            PasswordHash = passwordHash;
-            Role = role;
-        }
+        Username = username;
+        PasswordHash = passwordHash;
+        Role = role;
     }
-
 }

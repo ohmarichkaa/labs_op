@@ -11,6 +11,7 @@ namespace lab6_op.Forms
         private readonly ReservationService _reservationService;
         private readonly UserService _userService;
         private readonly BookService _bookService;
+        private readonly ValidationService _validationService = new ValidationService();
 
         public ReservationForm(
             ReservationService reservationService,
@@ -61,6 +62,12 @@ namespace lab6_op.Forms
             var startDate = dateTimePickerStart.Value;
             var endDate = dateTimePickerEnd.Value;
 
+            if (!_validationService.ValidateReservationDates(startDate, endDate, out string error))
+            {
+                MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var (success, message) = _reservationService.AddReservation(userId, bookId, startDate, endDate);
 
             if (success)
@@ -88,6 +95,12 @@ namespace lab6_op.Forms
             DateTime startDate = dateTimePickerStart.Value;
             DateTime endDate = dateTimePickerEnd.Value;
 
+            if (!_validationService.ValidateReservationDates(startDate, endDate, out string error))
+            {
+                MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var (success, message) = _reservationService.UpdateReservation(reservationId, userId, bookId, startDate, endDate);
 
             if (success)
@@ -100,6 +113,7 @@ namespace lab6_op.Forms
                 MessageBox.Show(message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void btnDelete_Click(object sender, EventArgs e)
         {

@@ -9,7 +9,7 @@ namespace lab6_op.Forms
     public partial class BookForm : Form
     {
         private readonly BookService _bookService;
-
+        private readonly ValidationService _validationService = new ValidationService();
         public BookForm(BookService bookService)
         {
             InitializeComponent();
@@ -72,6 +72,12 @@ namespace lab6_op.Forms
                     Available = chkAvailable.Checked
                 };
 
+                if (!_validationService.ValidateBook(newBook, out string error))
+                {
+                    MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 _bookService.AddBook(newBook);
                 LoadBooks();
                 ClearInputFields();
@@ -81,6 +87,7 @@ namespace lab6_op.Forms
                 MessageBox.Show($"Помилка при додаванні книги: {ex.Message}");
             }
         }
+
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
@@ -96,6 +103,12 @@ namespace lab6_op.Forms
                     book.Pages = int.Parse(txtPages.Text);
                     book.Available = chkAvailable.Checked;
 
+                    if (!_validationService.ValidateBook(book, out string error))
+                    {
+                        MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     _bookService.UpdateBook(book);
                     LoadBooks();
                     ClearInputFields();
@@ -106,6 +119,7 @@ namespace lab6_op.Forms
                 MessageBox.Show("Будь ласка, виберіть книгу для редагування.");
             }
         }
+
 
         private void btnDelete_Click(object sender, EventArgs e)
         {

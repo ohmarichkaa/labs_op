@@ -20,7 +20,6 @@ namespace lab6_op.Forms
         {
             InitializeComponent();
 
-            // Репозиторій книг (через Holder)
             if (Holder.BookRepository.GetAll().Count == 0)
             {
                 Holder.BookRepository.Add(new Book(1, "Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
@@ -28,15 +27,18 @@ namespace lab6_op.Forms
                 Holder.BookRepository.Add(new Book(3, "Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
             }
 
-            // Репозиторії користувачів (оновлені)
             var userRegRepository = new Repository<UserReg>(
                 new JsonStorage<UserReg>("userregs.json"));
 
             var userRepository = new Repository<User>(
                 new JsonStorage<User>("users.json"));
 
-            // Ініціалізація AuthService
             _authService = new AuthService(userRegRepository, userRepository);
+
+            if (_authService.GetUserByUsername("admin") == null)
+            {
+                _authService.Register("admin", "admin", "Admin", "Адмін", "Системи", "admin@library.com", "Admin");
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -50,7 +52,7 @@ namespace lab6_op.Forms
             {
                 MessageBox.Show($"Ласкаво просимо, {user.Username}!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                if (user.Role == "Admin")
+                if (user.Role == "admin")
                 {
                     MainForm adminForm = new MainForm(user);
                     adminForm.Show();

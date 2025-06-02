@@ -80,14 +80,13 @@ namespace lab6_op.Forms
                 return;
             }
 
-            var success = _authService.Register(username, password, firstName, lastName, email, phone, "User");
+            var success = _authService.Register(username, password, "User", firstName, lastName, email, phone);
 
             if (success)
             {
                 MessageBox.Show("Реєстрація успішна!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Отримати створеного користувача з репозиторію
-                var user = _authService.GetUserByUsername(username); // Тебе треба додати цей метод в AuthService
+                var user = _authService.GetUserByUsername(username); 
 
                 var userForm = new UUSerForm(user);
                 userForm.Show();

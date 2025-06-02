@@ -1,42 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using lab6_op.Models;
+using lab6_op.Services;
+using System;
 using System.Windows.Forms;
-using lab6_op.Models;
-using lab6_op.Repositories;
 
 namespace lab6_op.Forms
 {
     public partial class LoginForm : Form
     {
         private readonly AuthService _authService;
+        private readonly BookService _bookService;
+        private readonly UserService _userService;
+        private readonly ReservationService _reservationService;
 
-        public LoginForm()
+        public LoginForm(AuthService authService, BookService bookService, UserService userService, ReservationService reservationService)
         {
             InitializeComponent();
+            _authService = authService;
+            _bookService = bookService;
+            _userService = userService;
+            _reservationService = reservationService;
 
-            // Репозиторій книг (через Holder)
-            if (Holder.BookRepository.GetAll().Count == 0)
+            if (_authService.GetUserByUsername("admin") == null)
             {
-                Holder.BookRepository.Add(new Book(1, "Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
-                Holder.BookRepository.Add(new Book(2, "Фауст", "Й.В. Ґете", 1808, 350) { Available = true });
-                Holder.BookRepository.Add(new Book(3, "Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
+                _authService.Register("admin", "admin", "admin", "Admin", "Адмін", "admin@library.com", "0000000000");
             }
-
-            // Репозиторії користувачів (оновлені)
-            var userRegRepository = new Repository<UserReg>(
-                new JsonStorage<UserReg>("userregs.json"));
-
-            var userRepository = new Repository<User>(
-                new JsonStorage<User>("users.json"));
-
-            // Ініціалізація AuthService
-            _authService = new AuthService(userRegRepository, userRepository);
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -50,14 +37,14 @@ namespace lab6_op.Forms
             {
                 MessageBox.Show($"Ласкаво просимо, {user.Username}!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                if (user.Role == "Admin")
+                if (user.Role.ToLower() == "admin")
                 {
-                    MainForm adminForm = new MainForm(user);
-                    adminForm.Show();
+                    var mainForm = new MainForm(user, _userService, _bookService, _reservationService);
+                    mainForm.Show();
                 }
                 else
                 {
-                    var userForm = new UUSerForm(user);
+                    var userForm = new UUSerForm(user, _bookService);
                     userForm.Show();
                 }
 
@@ -68,6 +55,5 @@ namespace lab6_op.Forms
                 MessageBox.Show("Невірний логін або пароль.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }

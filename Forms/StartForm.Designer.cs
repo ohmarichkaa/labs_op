@@ -64,7 +64,6 @@
             lblChoose.Size = new Size(72, 15);
             lblChoose.TabIndex = 2;
             lblChoose.Text = "Оберіть дію";
-            lblChoose.Click += label1_Click;
             // 
             // StartForm
             // 

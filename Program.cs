@@ -1,4 +1,7 @@
+using lab6_op.Data;
 using lab6_op.Forms;
+using lab6_op.Models;
+using lab6_op.Services;
 
 namespace lab6_op
 {
@@ -10,9 +13,14 @@ namespace lab6_op
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+            using var context = new LibraryContext();
+
+            var bookService = new BookService(context);
+            var userService = new UserService(context);
+            var reservationService = new ReservationService(context);
+            var authService = new AuthService(context);
+
             Application.Run(new StartForm());
         }
     }

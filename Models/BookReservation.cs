@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace lab6_op.Models
 {
     class BookReservation : Reservation, IReservation
     {
-        private Book Book { get; set; }
-        private User User { get; set; }
+        public Book Book { get; private set; }
+        public User User { get; private set; }
 
         public override bool IsReserved { get; set; }
 
-        public BookReservation(int id, int userId, int bookId, Book book, User user) : base(id, userId, bookId)
+        public BookReservation(int id, int userId, int bookId, Book book, User user)
+            : base(id, userId, bookId)
         {
-            Book = book;
-            User = user;
+            Book = book ?? throw new ArgumentNullException(nameof(book));
+            User = user ?? throw new ArgumentNullException(nameof(user));
             IsReserved = false;
         }
 
@@ -26,14 +23,22 @@ namespace lab6_op.Models
             {
                 base.Reserve(startDate, endDate);
                 Book.Available = false;
-                Console.WriteLine($"Книга '{Book.Title}' заброньована користувачем {User.FirstName} з {StartDate.ToShortDateString()} до {EndDate.ToShortDateString()}.");
+
+                Console.WriteLine(
+                    $"Книга '{Book.Title}' заброньована користувачем {User.FirstName} з {StartDate:dd.MM.yyyy} до {EndDate:dd.MM.yyyy}.");
             }
             else
             {
-                Console.WriteLine("Неможливо забронювати книгу. Вона вже заброньована.");
+                Console.WriteLine($"Неможливо забронювати книгу '{Book.Title}'. Вона вже заброньована.");
             }
         }
+
+        public override void CancelReservation()
+        {
+            base.CancelReservation();
+            Book.Available = true;
+
+            Console.WriteLine($"Бронювання книги '{Book.Title}' скасовано.");
+        }
     }
-
 }
-

@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using lab6_op.Models;
-using lab6_op.Repositories;
+using lab6_op.Services;
 
 namespace lab6_op.Forms
 {
     public partial class UserForm : Form
     {
-        private readonly Repository<User> _userRepository;
+        private readonly UserService _userService;
+        private readonly ValidationService _validationService = new ValidationService();
 
-        public UserForm(Repository<User> userRepository)
+        public UserForm(UserService userService)
         {
             InitializeComponent();
-            _userRepository = userRepository;
+            _userService = userService;
             LoadUsers();
         }
 
         private void LoadUsers()
         {
-            var users = _userRepository.GetAll();
+            var users = _userService.GetAllUsers();
             dataGridViewUsers.DataSource = users.Select(u => new
             {
                 u.ID,
@@ -34,7 +33,7 @@ namespace lab6_op.Forms
 
         private int GetNextUserId()
         {
-            var users = _userRepository.GetAll();
+            var users = _userService.GetAllUsers();
             return users.Count == 0 ? 1 : users.Max(u => u.ID) + 1;
         }
 
@@ -50,14 +49,16 @@ namespace lab6_op.Forms
         {
             try
             {
-                var newUser = new User(
-                    GetNextUserId(),
-                    txtFirstName.Text,
-                    txtLastName.Text,
-                    txtEmail.Text,
-                    txtPhone.Text);
+                var newUser = new User(txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
 
-                _userRepository.Add(newUser);
+                if (!_validationService.ValidateUser(newUser, out string error))
+                {
+                    MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                _userService.AddUser(newUser.FirstName, newUser.LastName, newUser.Email, newUser.Phone);
+
                 LoadUsers();
                 ClearInputFields();
             }
@@ -67,23 +68,24 @@ namespace lab6_op.Forms
             }
         }
 
+
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (dataGridViewUsers.SelectedRows.Count > 0)
             {
                 int selectedId = (int)dataGridViewUsers.SelectedRows[0].Cells["ID"].Value;
-                var user = _userRepository.GetById(selectedId);
-                if (user != null)
-                {
-                    user.FirstName = txtFirstName.Text;
-                    user.LastName = txtLastName.Text;
-                    user.Email = txtEmail.Text;
-                    user.Phone = txtPhone.Text;
 
-                    _userRepository.Update(user); // додано збереження
-                    LoadUsers();
-                    ClearInputFields();
+                var updatedUser = new User(txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
+
+                if (!_validationService.ValidateUser(updatedUser, out string error))
+                {
+                    MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
+
+                _userService.UpdateUser(updatedUser.ID, updatedUser.FirstName, updatedUser.LastName, updatedUser.Email, updatedUser.Phone);
+                LoadUsers();
+                ClearInputFields();
             }
             else
             {
@@ -91,15 +93,16 @@ namespace lab6_op.Forms
             }
         }
 
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (dataGridViewUsers.SelectedRows.Count > 0)
             {
                 int selectedId = (int)dataGridViewUsers.SelectedRows[0].Cells["ID"].Value;
-                var user = _userRepository.GetById(selectedId);
+                var user = _userService.GetUserById(selectedId);
                 if (user != null)
                 {
-                    _userRepository.Remove(user);
+                    _userService.DeleteUser(selectedId);
                     LoadUsers();
                     ClearInputFields();
                 }

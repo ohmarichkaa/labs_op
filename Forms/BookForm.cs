@@ -1,48 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using lab6_op.Models;
-using lab6_op.Repositories;
+using lab6_op.Services;
 
 namespace lab6_op.Forms
 {
     public partial class BookForm : Form
     {
-        private readonly Repository<Book> _bookRepository;
-
-
-        public BookForm(Repository<Book> bookRepository)
+        private readonly BookService _bookService;
+        private readonly ValidationService _validationService = new ValidationService();
+        public BookForm(BookService bookService)
         {
             InitializeComponent();
+            _bookService = bookService;
 
-            _bookRepository = bookRepository;
-
-            if (_bookRepository.GetAll().Count == 0)
+            if (_bookService.GetAllBooks().Count == 0)
             {
-                _bookRepository.Add(new Book(1, "Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
-                _bookRepository.Add(new Book(2, "Фауст", "Й.В. Ґете", 1808, 350) { Available = true });
-                _bookRepository.Add(new Book(3, "Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
+                _bookService.AddBook(new Book("Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
+                _bookService.AddBook(new Book("Фауст", "Й.В. Ґете", 1808, 350) { Available = true });
+                _bookService.AddBook(new Book("Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
             }
 
             LoadBooks();
         }
 
-
-
         private void LoadBooks()
         {
-            var books = _bookRepository.GetAll();
+            var books = _bookService.GetAllBooks();
             dataGridViewBooks.DataSource = null;
             dataGridViewBooks.AutoGenerateColumns = true;
 
             dataGridViewBooks.DataSource = books.Select(b => new
-
             {
                 b.ID,
                 b.Title,
@@ -55,7 +44,7 @@ namespace lab6_op.Forms
 
         private int GetNextBookId()
         {
-            var books = _bookRepository.GetAll();
+            var books = _bookService.GetAllBooks();
             return books.Count == 0 ? 1 : books.Max(b => b.ID) + 1;
         }
 
@@ -67,22 +56,12 @@ namespace lab6_op.Forms
             txtPages.Text = "";
             chkAvailable.Checked = true;
         }
-        private void BookForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
             try
             {
                 var newBook = new Book(
-                    GetNextBookId(),
                     txtTitle.Text,
                     txtAuthor.Text,
                     int.Parse(txtYear.Text),
@@ -92,7 +71,13 @@ namespace lab6_op.Forms
                     Available = chkAvailable.Checked
                 };
 
-                _bookRepository.Add(newBook);
+                if (!_validationService.ValidateBook(newBook, out string error))
+                {
+                    MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _bookService.AddBook(newBook);
                 LoadBooks();
                 ClearInputFields();
             }
@@ -102,12 +87,13 @@ namespace lab6_op.Forms
             }
         }
 
+
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (dataGridViewBooks.SelectedRows.Count > 0)
             {
                 int selectedId = (int)dataGridViewBooks.SelectedRows[0].Cells["ID"].Value;
-                var book = _bookRepository.GetById(selectedId);
+                var book = _bookService.GetBookById(selectedId);
                 if (book != null)
                 {
                     book.Title = txtTitle.Text;
@@ -116,6 +102,13 @@ namespace lab6_op.Forms
                     book.Pages = int.Parse(txtPages.Text);
                     book.Available = chkAvailable.Checked;
 
+                    if (!_validationService.ValidateBook(book, out string error))
+                    {
+                        MessageBox.Show(error, "Помилка валідації", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    _bookService.UpdateBook(book);
                     LoadBooks();
                     ClearInputFields();
                 }
@@ -126,15 +119,16 @@ namespace lab6_op.Forms
             }
         }
 
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (dataGridViewBooks.SelectedRows.Count > 0)
             {
                 int selectedId = (int)dataGridViewBooks.SelectedRows[0].Cells["ID"].Value;
-                var book = _bookRepository.GetById(selectedId);
+                var book = _bookService.GetBookById(selectedId);
                 if (book != null)
                 {
-                    _bookRepository.Remove(book);
+                    _bookService.RemoveBook(book);
                     LoadBooks();
                     ClearInputFields();
                 }
@@ -148,16 +142,6 @@ namespace lab6_op.Forms
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             LoadBooks();
-        }
-
-        private void txtPages_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkAvailable_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void dataGridViewBooks_CellContentClick(object sender, DataGridViewCellEventArgs e)

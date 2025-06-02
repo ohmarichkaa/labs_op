@@ -48,17 +48,17 @@
             // 
             dataGridViewUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewUsers.Location = new Point(253, 22);
-            dataGridViewUsers.Margin = new Padding(2, 2, 2, 2);
+            dataGridViewUsers.Margin = new Padding(2);
             dataGridViewUsers.Name = "dataGridViewUsers";
             dataGridViewUsers.RowHeadersWidth = 72;
             dataGridViewUsers.Size = new Size(294, 138);
             dataGridViewUsers.TabIndex = 0;
-            dataGridViewUsers.CellContentClick += dataGridViewUsers_CellContentClick;
+            dataGridViewUsers.CellClick += dataGridViewUsers_CellContentClick;
             // 
             // btnAdd
             // 
             btnAdd.Location = new Point(36, 178);
-            btnAdd.Margin = new Padding(2, 2, 2, 2);
+            btnAdd.Margin = new Padding(2);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(76, 36);
             btnAdd.TabIndex = 1;
@@ -69,7 +69,7 @@
             // btnEdit
             // 
             btnEdit.Location = new Point(318, 178);
-            btnEdit.Margin = new Padding(2, 2, 2, 2);
+            btnEdit.Margin = new Padding(2);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(76, 36);
             btnEdit.TabIndex = 2;
@@ -80,7 +80,7 @@
             // btnDelete
             // 
             btnDelete.Location = new Point(156, 178);
-            btnDelete.Margin = new Padding(2, 2, 2, 2);
+            btnDelete.Margin = new Padding(2);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(76, 36);
             btnDelete.TabIndex = 3;
@@ -91,7 +91,7 @@
             // brnRefresh
             // 
             brnRefresh.Location = new Point(442, 178);
-            brnRefresh.Margin = new Padding(2, 2, 2, 2);
+            brnRefresh.Margin = new Padding(2);
             brnRefresh.Name = "brnRefresh";
             brnRefresh.Size = new Size(76, 36);
             brnRefresh.TabIndex = 4;
@@ -102,7 +102,7 @@
             // txtFirstName
             // 
             txtFirstName.Location = new Point(128, 22);
-            txtFirstName.Margin = new Padding(2, 2, 2, 2);
+            txtFirstName.Margin = new Padding(2);
             txtFirstName.Name = "txtFirstName";
             txtFirstName.Size = new Size(104, 23);
             txtFirstName.TabIndex = 5;
@@ -110,7 +110,7 @@
             // txtLastName
             // 
             txtLastName.Location = new Point(128, 60);
-            txtLastName.Margin = new Padding(2, 2, 2, 2);
+            txtLastName.Margin = new Padding(2);
             txtLastName.Name = "txtLastName";
             txtLastName.Size = new Size(104, 23);
             txtLastName.TabIndex = 6;
@@ -118,7 +118,7 @@
             // txtEmail
             // 
             txtEmail.Location = new Point(128, 98);
-            txtEmail.Margin = new Padding(2, 2, 2, 2);
+            txtEmail.Margin = new Padding(2);
             txtEmail.Name = "txtEmail";
             txtEmail.Size = new Size(104, 23);
             txtEmail.TabIndex = 7;
@@ -126,7 +126,7 @@
             // txtPhone
             // 
             txtPhone.Location = new Point(128, 137);
-            txtPhone.Margin = new Padding(2, 2, 2, 2);
+            txtPhone.Margin = new Padding(2);
             txtPhone.Name = "txtPhone";
             txtPhone.Size = new Size(104, 23);
             txtPhone.TabIndex = 8;
@@ -189,7 +189,7 @@
             Controls.Add(btnEdit);
             Controls.Add(btnAdd);
             Controls.Add(dataGridViewUsers);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "UserForm";
             Text = "UserForm";
             ((System.ComponentModel.ISupportInitialize)dataGridViewUsers).EndInit();

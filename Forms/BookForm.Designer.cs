@@ -49,7 +49,7 @@
             // btnAdd
             // 
             btnAdd.Location = new Point(118, 160);
-            btnAdd.Margin = new Padding(2, 2, 2, 2);
+            btnAdd.Margin = new Padding(2);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(76, 26);
             btnAdd.TabIndex = 5;
@@ -61,17 +61,17 @@
             // 
             dataGridViewBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewBooks.Location = new Point(221, 14);
-            dataGridViewBooks.Margin = new Padding(2, 2, 2, 2);
+            dataGridViewBooks.Margin = new Padding(2);
             dataGridViewBooks.Name = "dataGridViewBooks";
             dataGridViewBooks.RowHeadersWidth = 72;
             dataGridViewBooks.Size = new Size(241, 138);
             dataGridViewBooks.TabIndex = 0;
-            dataGridViewBooks.CellContentClick += dataGridViewBooks_CellContentClick;
+            dataGridViewBooks.CellClick += dataGridViewBooks_CellContentClick;
             // 
             // txtTitle
             // 
             txtTitle.Location = new Point(100, 17);
-            txtTitle.Margin = new Padding(2, 2, 2, 2);
+            txtTitle.Margin = new Padding(2);
             txtTitle.Name = "txtTitle";
             txtTitle.Size = new Size(104, 23);
             txtTitle.TabIndex = 1;
@@ -79,7 +79,7 @@
             // txtAuthor
             // 
             txtAuthor.Location = new Point(100, 55);
-            txtAuthor.Margin = new Padding(2, 2, 2, 2);
+            txtAuthor.Margin = new Padding(2);
             txtAuthor.Name = "txtAuthor";
             txtAuthor.Size = new Size(104, 23);
             txtAuthor.TabIndex = 2;
@@ -87,7 +87,7 @@
             // txtYear
             // 
             txtYear.Location = new Point(100, 93);
-            txtYear.Margin = new Padding(2, 2, 2, 2);
+            txtYear.Margin = new Padding(2);
             txtYear.Name = "txtYear";
             txtYear.Size = new Size(104, 23);
             txtYear.TabIndex = 3;
@@ -95,16 +95,15 @@
             // txtPages
             // 
             txtPages.Location = new Point(133, 129);
-            txtPages.Margin = new Padding(2, 2, 2, 2);
+            txtPages.Margin = new Padding(2);
             txtPages.Name = "txtPages";
             txtPages.Size = new Size(71, 23);
             txtPages.TabIndex = 4;
-            txtPages.TextChanged += txtPages_TextChanged;
             // 
             // btnEdit
             // 
             btnEdit.Location = new Point(297, 162);
-            btnEdit.Margin = new Padding(2, 2, 2, 2);
+            btnEdit.Margin = new Padding(2);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(76, 26);
             btnEdit.TabIndex = 6;
@@ -115,7 +114,7 @@
             // btnDelete
             // 
             btnDelete.Location = new Point(208, 162);
-            btnDelete.Margin = new Padding(2, 2, 2, 2);
+            btnDelete.Margin = new Padding(2);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(76, 26);
             btnDelete.TabIndex = 7;
@@ -126,7 +125,7 @@
             // btnRefresh
             // 
             btnRefresh.Location = new Point(386, 162);
-            btnRefresh.Margin = new Padding(2, 2, 2, 2);
+            btnRefresh.Margin = new Padding(2);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(76, 26);
             btnRefresh.TabIndex = 8;
@@ -143,7 +142,6 @@
             lblTitle.Size = new Size(74, 15);
             lblTitle.TabIndex = 9;
             lblTitle.Text = "Назва книги";
-            lblTitle.Click += label1_Click;
             // 
             // lblAuthor
             // 
@@ -179,13 +177,12 @@
             // 
             chkAvailable.AutoSize = true;
             chkAvailable.Location = new Point(22, 162);
-            chkAvailable.Margin = new Padding(2, 2, 2, 2);
+            chkAvailable.Margin = new Padding(2);
             chkAvailable.Name = "chkAvailable";
             chkAvailable.Size = new Size(78, 19);
             chkAvailable.TabIndex = 13;
             chkAvailable.Text = "Доступна";
             chkAvailable.UseVisualStyleBackColor = true;
-            chkAvailable.CheckedChanged += chkAvailable_CheckedChanged;
             // 
             // BookForm
             // 
@@ -206,10 +203,9 @@
             Controls.Add(txtAuthor);
             Controls.Add(txtTitle);
             Controls.Add(dataGridViewBooks);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "BookForm";
             Text = "BookForm";
-            Load += BookForm_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridViewBooks).EndInit();
             ResumeLayout(false);
             PerformLayout();

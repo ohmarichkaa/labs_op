@@ -1,4 +1,6 @@
-﻿using System;
+﻿using lab6_op.Models;
+using lab6_op.Repositories;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,21 +19,21 @@ namespace lab6_op.Forms
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
+        private readonly AuthService _authService = new AuthService(
+            new Repository<UserReg>(new JsonStorage<UserReg>("userregs.json")),
+            new Repository<User>(new JsonStorage<User>("users.json"))
+        );
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            var loginForm = new LoginForm();
+            var loginForm = new LoginForm(_authService);
             loginForm.Show();
             this.Hide();
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            var registerForm = new Registerform();
+            var registerForm = new Registerform(_authService);
             registerForm.Show();
             this.Hide();
         }

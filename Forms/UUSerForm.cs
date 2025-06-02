@@ -8,29 +8,27 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using lab6_op.Models;
 using lab6_op.Repositories;
+using lab6_op.Services;
 
 namespace lab6_op.Forms
 {
     public partial class UUSerForm : Form
     {
-        private UserReg _currentUser;
-        private IRepository<Book> _bookRepository;
+        private readonly UserReg _currentUser;
+        private readonly BookService _bookService;
 
-        public UUSerForm(UserReg user)
+        public UUSerForm(UserReg user, BookService bookService)
         {
             InitializeComponent();
             _currentUser = user;
-
-            // Оновлено: з JSON-файлу
-            _bookRepository = new Repository<Book>(
-                new JsonStorage<Book>("books.json"));
+            _bookService = bookService;
 
             LoadBooks();
         }
 
         private void LoadBooks()
         {
-            var books = _bookRepository.GetAll();
+            var books = _bookService.GetAllBooks();
             dataGridView1.DataSource = books.Select(b => new
             {
                 b.ID,
@@ -51,12 +49,12 @@ namespace lab6_op.Forms
             if (dataGridView1.CurrentRow != null)
             {
                 int selectedId = (int)dataGridView1.CurrentRow.Cells["ID"].Value;
-                var book = _bookRepository.GetById(selectedId);
+                var book = _bookService.GetBookById(selectedId);
 
                 if (book != null && book.Available)
                 {
                     book.Available = false;
-                    _bookRepository.Update(book); // ← збереження зміни
+                    _bookService.UpdateBook(book);
                     MessageBox.Show($"Книгу \"{book.Title}\" заброньовано!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadBooks();
                 }

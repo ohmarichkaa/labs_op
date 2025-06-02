@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using lab6_op.Forms;
 using lab6_op.Models;
 using lab6_op.Repositories;
+using lab6_op.Services;
 
 namespace lab6_op.Forms
 {
     public partial class MainForm : Form
     {
-        private readonly Repository<User> _userRepository;
-        private readonly Repository<Book> _bookRepository;
-        private readonly Repository<Reservation> _reservationRepository;
+        private readonly UserService _userService;
+        private readonly BookService _bookService;
+        private readonly ReservationService _reservationService;
 
         private UserReg _currentUser;
 
@@ -25,14 +19,15 @@ namespace lab6_op.Forms
         {
             InitializeComponent();
 
-            _userRepository = new Repository<User>(
-                new JsonStorage<User>("users.json"));
+            // Ініціалізуємо сервіси з відповідними репозиторіями
+            var userRepo = new Repository<User>(new JsonStorage<User>("users.json"));
+            var bookRepo = new Repository<Book>(new JsonStorage<Book>("books.json"));
+            var reservationRepo = new Repository<Reservation>(new JsonStorage<Reservation>("reservations.json"));
 
-            _bookRepository = new Repository<Book>(
-                new JsonStorage<Book>("books.json"));
+            _userService = new UserService(userRepo);
+            _bookService = new BookService(bookRepo);
+            _reservationService = new ReservationService(reservationRepo, userRepo, bookRepo);
 
-            _reservationRepository = new Repository<Reservation>(
-                new JsonStorage<Reservation>("reservations.json"));
         }
 
         public MainForm(UserReg user) : this()
@@ -42,22 +37,19 @@ namespace lab6_op.Forms
 
         private void btnUsers_Click(object sender, EventArgs e)
         {
-            UserForm userForm = new UserForm(_userRepository);
+            var userForm = new UserForm(_userService);
             userForm.ShowDialog();
         }
 
         private void btnBooks_Click(object sender, EventArgs e)
         {
-            BookForm bookForm = new BookForm(_bookRepository);
+            var bookForm = new BookForm(_bookService);
             bookForm.ShowDialog();
         }
 
         private void btnReservation_Click(object sender, EventArgs e)
         {
-            ReservationForm reservationForm = new ReservationForm(
-                _reservationRepository,
-                _userRepository,
-                _bookRepository);
+            var reservationForm = new ReservationForm(_reservationService, _userService, _bookService);
             reservationForm.ShowDialog();
         }
 

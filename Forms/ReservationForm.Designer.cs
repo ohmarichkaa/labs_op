@@ -44,7 +44,7 @@
             // 
             comboBoxUsers.FormattingEnabled = true;
             comboBoxUsers.Location = new Point(16, 106);
-            comboBoxUsers.Margin = new Padding(2, 2, 2, 2);
+            comboBoxUsers.Margin = new Padding(2);
             comboBoxUsers.Name = "comboBoxUsers";
             comboBoxUsers.Size = new Size(146, 23);
             comboBoxUsers.TabIndex = 0;
@@ -53,7 +53,7 @@
             // 
             comboBoxBooks.FormattingEnabled = true;
             comboBoxBooks.Location = new Point(16, 142);
-            comboBoxBooks.Margin = new Padding(2, 2, 2, 2);
+            comboBoxBooks.Margin = new Padding(2);
             comboBoxBooks.Name = "comboBoxBooks";
             comboBoxBooks.Size = new Size(146, 23);
             comboBoxBooks.TabIndex = 1;
@@ -61,7 +61,7 @@
             // dateTimePickerEnd
             // 
             dateTimePickerEnd.Location = new Point(16, 57);
-            dateTimePickerEnd.Margin = new Padding(2, 2, 2, 2);
+            dateTimePickerEnd.Margin = new Padding(2);
             dateTimePickerEnd.Name = "dateTimePickerEnd";
             dateTimePickerEnd.Size = new Size(146, 23);
             dateTimePickerEnd.TabIndex = 2;
@@ -69,7 +69,7 @@
             // dateTimePickerStart
             // 
             dateTimePickerStart.Location = new Point(16, 13);
-            dateTimePickerStart.Margin = new Padding(2, 2, 2, 2);
+            dateTimePickerStart.Margin = new Padding(2);
             dateTimePickerStart.Name = "dateTimePickerStart";
             dateTimePickerStart.Size = new Size(146, 23);
             dateTimePickerStart.TabIndex = 3;
@@ -78,17 +78,17 @@
             // 
             dataGridViewReservations.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewReservations.Location = new Point(177, 13);
-            dataGridViewReservations.Margin = new Padding(2, 2, 2, 2);
+            dataGridViewReservations.Margin = new Padding(2);
             dataGridViewReservations.Name = "dataGridViewReservations";
             dataGridViewReservations.RowHeadersWidth = 72;
             dataGridViewReservations.Size = new Size(275, 152);
             dataGridViewReservations.TabIndex = 4;
-            dataGridViewReservations.CellContentClick += dataGridViewReservations_SelectionChanged;
+            dataGridViewReservations.CellClick += dataGridViewReservations_SelectionChanged;
             // 
             // btnAdd
             // 
             btnAdd.Location = new Point(23, 184);
-            btnAdd.Margin = new Padding(2, 2, 2, 2);
+            btnAdd.Margin = new Padding(2);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(76, 30);
             btnAdd.TabIndex = 5;
@@ -99,7 +99,7 @@
             // btnEdit
             // 
             btnEdit.Location = new Point(256, 184);
-            btnEdit.Margin = new Padding(2, 2, 2, 2);
+            btnEdit.Margin = new Padding(2);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(76, 30);
             btnEdit.TabIndex = 6;
@@ -110,7 +110,7 @@
             // btnDelete
             // 
             btnDelete.Location = new Point(142, 183);
-            btnDelete.Margin = new Padding(2, 2, 2, 2);
+            btnDelete.Margin = new Padding(2);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(76, 30);
             btnDelete.TabIndex = 7;
@@ -121,7 +121,7 @@
             // btnRefresh
             // 
             btnRefresh.Location = new Point(369, 184);
-            btnRefresh.Margin = new Padding(2, 2, 2, 2);
+            btnRefresh.Margin = new Padding(2);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(76, 30);
             btnRefresh.TabIndex = 8;
@@ -143,7 +143,7 @@
             Controls.Add(dateTimePickerEnd);
             Controls.Add(comboBoxBooks);
             Controls.Add(comboBoxUsers);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "ReservationForm";
             Text = "ReservationForm";
             ((System.ComponentModel.ISupportInitialize)dataGridViewReservations).EndInit();

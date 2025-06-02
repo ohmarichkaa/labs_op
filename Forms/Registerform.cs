@@ -1,4 +1,7 @@
-﻿using System;
+﻿using lab6_op.Models;
+using lab6_op.Repositories;
+using lab6_op.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,8 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using lab6_op.Models;
-using lab6_op.Repositories;
 
 
 namespace lab6_op.Forms
@@ -18,50 +19,14 @@ namespace lab6_op.Forms
 
 
 
-        private void label1_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtPassword_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblConfirm_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtConfirm_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtUserName_TextChanged(object sender, EventArgs e)
-        {
-
-        }
         private readonly AuthService _authService;
 
-        public Registerform()
+        public Registerform(AuthService authService)
         {
             InitializeComponent();
-
-            var userRegRepo = new Repository<UserReg>(
-                new JsonStorage<UserReg>("userregs.json"));
-
-            var userRepo = new Repository<User>(
-                new JsonStorage<User>("users.json"));
-
-            _authService = new AuthService(userRegRepo, userRepo);
+            _authService = authService;
         }
-
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
@@ -85,10 +50,12 @@ namespace lab6_op.Forms
             if (success)
             {
                 MessageBox.Show("Реєстрація успішна!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var user = _authService.GetUserByUsername(username);
+                var bookRepository = new Repository<Book>(new JsonStorage<Book>("books.json"));
+                var bookService = new BookService(bookRepository);
 
-                var user = _authService.GetUserByUsername(username); 
-
-                var userForm = new UUSerForm(user);
+                var userForm = new UUSerForm(user, bookService);
+                userForm.Show();
                 userForm.Show();
                 this.Hide();
             }
@@ -96,53 +63,6 @@ namespace lab6_op.Forms
             {
                 MessageBox.Show("Користувач з таким іменем вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void Registerform_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtPhone_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtEmail_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLast_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_2(object sender, EventArgs e)
-        {
-
-        }
-
-   
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click_1(object sender, EventArgs e)
-        {
-
-        }
+        }        
     }
 }

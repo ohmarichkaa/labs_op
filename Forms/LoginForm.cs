@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using lab6_op.Models;
+﻿using lab6_op.Models;
 using lab6_op.Repositories;
+using lab6_op.Services;
+using System;
+using System.Windows.Forms;
 
 namespace lab6_op.Forms
 {
@@ -16,28 +10,15 @@ namespace lab6_op.Forms
     {
         private readonly AuthService _authService;
 
-        public LoginForm()
+        public LoginForm(AuthService authService)
         {
             InitializeComponent();
+            _authService = authService;
 
-            if (Holder.BookRepository.GetAll().Count == 0)
-            {
-                Holder.BookRepository.Add(new Book(1, "Кобзар", "Тарас Шевченко", 1840, 200) { Available = true });
-                Holder.BookRepository.Add(new Book(2, "Фауст", "Й.В. Ґете", 1808, 350) { Available = true });
-                Holder.BookRepository.Add(new Book(3, "Майстер і Маргарита", "Булгаков", 1967, 400) { Available = true });
-            }
-
-            var userRegRepository = new Repository<UserReg>(
-                new JsonStorage<UserReg>("userregs.json"));
-
-            var userRepository = new Repository<User>(
-                new JsonStorage<User>("users.json"));
-
-            _authService = new AuthService(userRegRepository, userRepository);
-
+            // Створюємо адміна, якщо ще не створено
             if (_authService.GetUserByUsername("admin") == null)
             {
-                _authService.Register("admin", "admin", "Admin", "Адмін", "Системи", "admin@library.com", "Admin");
+                _authService.Register("admin", "admin", "admin", "Admin", "Адмін", "admin@library.com", "0000000000");
             }
         }
 
@@ -52,14 +33,17 @@ namespace lab6_op.Forms
             {
                 MessageBox.Show($"Ласкаво просимо, {user.Username}!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                if (user.Role == "admin")
+                if (user.Role.ToLower() == "admin")
                 {
-                    MainForm adminForm = new MainForm(user);
-                    adminForm.Show();
+                    var mainForm = new MainForm(user);
+                    mainForm.Show();
                 }
                 else
                 {
-                    var userForm = new UUSerForm(user);
+                    var bookRepository = new Repository<Book>(new JsonStorage<Book>("books.json"));
+                    var bookService = new BookService(bookRepository);
+
+                    var userForm = new UUSerForm(user, bookService);
                     userForm.Show();
                 }
 
@@ -70,6 +54,5 @@ namespace lab6_op.Forms
                 MessageBox.Show("Невірний логін або пароль.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }

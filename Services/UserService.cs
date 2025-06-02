@@ -20,7 +20,7 @@ namespace lab6_op.Services
 
         public void AddUser(string firstName, string lastName, string email, string phone)
         {
-            var user = new User(0, firstName, lastName, email, phone);
+            var user = new User(firstName, lastName, email, phone);
             _context.Users.Add(user);
             _context.SaveChanges();
         }

@@ -49,7 +49,7 @@ namespace lab6_op.Forms
         {
             try
             {
-                var newUser = new User(GetNextUserId(), txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
+                var newUser = new User(txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
 
                 if (!_validationService.ValidateUser(newUser, out string error))
                 {
@@ -75,7 +75,7 @@ namespace lab6_op.Forms
             {
                 int selectedId = (int)dataGridViewUsers.SelectedRows[0].Cells["ID"].Value;
 
-                var updatedUser = new User(selectedId, txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
+                var updatedUser = new User(txtFirstName.Text, txtLastName.Text, txtEmail.Text, txtPhone.Text);
 
                 if (!_validationService.ValidateUser(updatedUser, out string error))
                 {

@@ -22,8 +22,7 @@ namespace lab6_op.Models
         [Phone(ErrorMessage = "Невірний формат телефону")]
         public string Phone { get; set; }
 
-        public User(int id, string firstName, string lastName, string email, string phone)
-            : base(id)
+        public User(string firstName, string lastName, string email, string phone)
         {
             FirstName = firstName;
             LastName = lastName;

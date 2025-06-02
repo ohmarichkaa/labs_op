@@ -38,7 +38,7 @@ namespace lab6_op.Services
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
             var userReg = new UserReg(0, username, passwordHash, role);
-            var user = new User(0, firstName, lastName, email, phone);
+            var user = new User(firstName, lastName, email, phone);
 
             _context.UserRegs.Add(userReg);
             _context.Users.Add(user);

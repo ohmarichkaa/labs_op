@@ -36,7 +36,7 @@ namespace lab6_op.Forms
                 return;
             }
 
-            var tempUser = new User(0, firstName, lastName, email, phone);
+            var tempUser = new User(firstName, lastName, email, phone);
 
             if (!_validationService.ValidateUser(tempUser, out string error))
             {
